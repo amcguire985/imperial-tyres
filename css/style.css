@@ -292,7 +292,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     letter-spacing: 0.06em;
 }
 @media (min-width: 600px) {
-    .stats-bar__grid { grid-template-columns: repeat(4, 1fr); }
+    .stats-bar__grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ================================================================
@@ -405,7 +405,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     color: var(--clr-primary);
 }
 @media (min-width: 900px) {
-    .about__grid { grid-template-columns: 1fr 1fr; align-items: start; }
     .about__values { grid-template-columns: 1fr 1fr; }
 }
 
