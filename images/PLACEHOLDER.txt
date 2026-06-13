@@ -1,0 +1,10 @@
+Place your image files in this folder.
+
+Expected files referenced by the site:
+  about.jpg           — About section photo (any professional/office/warehouse image)
+  brand-aeolus.png    — Aeolus tyre brand logo
+  brand-agate.png     — Agate tyre brand logo
+  brand-alliance.png  — Alliance Tire Group (ATG) logo
+  brand-boto.png      — Boto Quality Tyres logo
+
+The hero banner (stock_banner.jpg) lives in the project root alongside index.html.
