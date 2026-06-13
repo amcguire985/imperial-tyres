@@ -1,35 +1,55 @@
-name: Deploy to HostPresto via FTP
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+# Permissions required for the Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping queued runs in between
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: FTP Deploy
+  build:
+    name: Build site
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy files to HostPresto via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Stage site files
+        run: |
+          mkdir -p _site
+          rsync -av \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.claude' \
+            --exclude='_site' \
+            --exclude='*.pdf' \
+            --exclude='PLACEHOLDER.txt' \
+            ./ _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          server:   ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          server-dir: /public_html/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            .github/**
-            *.pdf
-            PLACEHOLDER.txt
-            images/PLACEHOLDER.txt
-            node_modules/**
+          path: _site
+
+  deploy:
+    name: Deploy to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
